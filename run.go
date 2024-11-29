@@ -121,12 +121,16 @@ func _getOutputArgs(node *Node, streamNameMap map[string]string) []string {
 	if len(node.GetInComingEdges()) == 0 {
 		panic("Output node has no mapped streams")
 	}
-	for _, e := range node.GetInComingEdges() {
-		streamName := formatInputStreamName(streamNameMap, e, true)
-		if streamName != "0" || len(node.GetInComingEdges()) > 1 {
-			args = append(args, "-map", streamName)
+
+	if !node.kwargs.HasKey("map") {
+		for _, e := range node.GetInComingEdges() {
+			streamName := formatInputStreamName(streamNameMap, e, true)
+			if streamName != "0" || len(node.GetInComingEdges()) > 1 {
+				args = append(args, "-map", streamName)
+			}
 		}
 	}
+
 	kwargs := node.kwargs.Copy()
 
 	filename := kwargs.PopString("filename")
@@ -268,7 +272,7 @@ func (s *Stream) Compile(options ...CompilationOption) *exec.Cmd {
 	for _, option := range GlobalCommandOptions {
 		option(cmd)
 	}
-  if LogCompiledCommand {
+	if LogCompiledCommand {
 		log.Printf("compiled command: ffmpeg %s\n", strings.Join(args, " "))
 	}
 	return cmd
