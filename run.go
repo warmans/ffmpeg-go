@@ -125,6 +125,7 @@ func _getOutputArgs(node *Node, streamNameMap map[string]string) []string {
 	for k, v := range node.kwargs {
 		if strings.HasPrefix(k, "map_") {
 			args = append(args, "-map", v.(string))
+			delete(node.kwargs, k)
 		}
 	}
 
