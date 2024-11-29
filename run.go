@@ -122,12 +122,9 @@ func _getOutputArgs(node *Node, streamNameMap map[string]string) []string {
 		panic("Output node has no mapped streams")
 	}
 
-	if !node.kwargs.HasKey("map") {
-		for _, e := range node.GetInComingEdges() {
-			streamName := formatInputStreamName(streamNameMap, e, true)
-			if streamName != "0" || len(node.GetInComingEdges()) > 1 {
-				args = append(args, "-map", streamName)
-			}
+	for k, v := range node.kwargs {
+		if strings.HasPrefix(k, "map_") {
+			args = append(args, "-map", v.(string))
 		}
 	}
 
