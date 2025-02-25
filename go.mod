@@ -1,4 +1,4 @@
-module github.com/warmans/ffmpeg-go
+module github.com/warmans/ffmpeg-go/v2
 
 go 1.16
 
